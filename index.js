@@ -1,23 +1,28 @@
 const express = require("express");
 const app = express();
-const port = 3000;
 const userRoutes = require('./routes/user');
 
-app.use('/user,', userRoutes);
+// begin middleware
+const middleware = function (req, res, next) {
+  console.log("I am middleware");
+  next();
+};
+app.use(middleware);
+// end middleware
 
+// connect html file
+app.use(express.static('public'));
+
+// mount userRoutes
+app.use('/user', userRoutes);
+
+// add port instructions
+const port = 3000;
 app.listen(port, () => {
   console.log(`Server listening on port: ${port}.`);
   });
 
-  // begin middleware
-  const logReq = function (req, res, next) {
-    console.log("Request Received");
-    next();
-  };
-  
-  app.use(logReq);
-  // end middleware
-  
+// Routes
 app.get("/", (req, res) => {
     res.send("Hello Express!");
   });
@@ -34,5 +39,5 @@ app.get("/", (req, res) => {
     res.send("Received a POST request for user!");
   });
 
-  console.log("----------SUCCESS ---------");
+  console.log("----------SUCCESS ----------");
 
